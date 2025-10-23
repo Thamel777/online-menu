@@ -1,5 +1,4 @@
-<?php
-include '../includes/header.php';
+<?php include __DIR__ . '/../includes/header.php';
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../index.php");

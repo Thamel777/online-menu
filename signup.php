@@ -1,5 +1,4 @@
-<?php
-include 'includes/header.php';
+<?php include __DIR__ . '/includes/header.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];

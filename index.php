@@ -1,26 +1,7 @@
-<?php include 'includes/header.php'; ?>
+<?php include __DIR__ . '/includes/header.php'; ?>
 
     <section id="Home">
-        <nav>
-            <div class="logo">
-                <img src="image/logo.png">
-            </div>
-
-            <ul>
-                <li><a href="#Home">Home</a></li>
-                <li><a href="#About">About</a></li>
-                <li><a href="#Menu">Menu</a></li>
-                <li><a href="#Gallary">Gallary</a></li>
-                <li><a href="#Review">Review</a></li>
-            </ul>
-
-            <div class="icon">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <i class="fa-solid fa-heart"></i>
-                <i class="fa-solid fa-cart-shopping"></i>
-            </div>
-
-        </nav>
+        <!-- nav removed -->
 
         <div class="main">
 
