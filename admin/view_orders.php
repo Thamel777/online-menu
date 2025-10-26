@@ -5,17 +5,66 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-if (isset($_GET['delete_id'])) {
-    $delete_id = $_GET['delete_id'];
-    $sql = "DELETE FROM orders WHERE id = $delete_id";
-    if ($conn->query($sql) === TRUE) {
-        echo "Order deleted successfully.";
+$success_message = '';
+$error_message = '';
+$show_confirm = false;
+$delete_id = null;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
+    $delete_id = (int) $_POST['delete_id'];
+
+    $stmt = $conn->prepare("DELETE FROM orders WHERE id = ?");
+    if ($stmt) {
+        $stmt->bind_param("i", $delete_id);
+        if ($stmt->execute()) {
+            $success_message = "Order deleted successfully.";
+        } else {
+            $error_message = "Unable to delete the order. Please try again.";
+        }
+        $stmt->close();
     } else {
-        echo "Error deleting record: " . $conn->error;
+        $error_message = "Unable to prepare the request. Please try again later.";
     }
+} elseif (isset($_GET['delete_id'])) {
+    $delete_id = (int) $_GET['delete_id'];
+    $show_confirm = true;
 }
 
 ?>
+
+<?php if ($show_confirm): ?>
+<div class="modal-overlay">
+    <div class="modal-window">
+        <h3>Delete Order</h3>
+        <p>Are you sure you want to delete order #<?php echo htmlspecialchars($delete_id, ENT_QUOTES, 'UTF-8'); ?>?</p>
+        <form method="post" class="modal-actions">
+            <input type="hidden" name="delete_id" value="<?php echo htmlspecialchars($delete_id, ENT_QUOTES, 'UTF-8'); ?>">
+            <button type="submit" class="btn btn-danger">Yes, delete</button>
+            <a href="view_orders.php" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php if ($success_message): ?>
+<div class="modal-overlay">
+    <div class="modal-window">
+        <h3>Success</h3>
+        <p><?php echo htmlspecialchars($success_message, ENT_QUOTES, 'UTF-8'); ?></p>
+        <a href="view_orders.php" class="btn">Close</a>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php if ($error_message): ?>
+<div class="modal-overlay">
+    <div class="modal-window">
+        <h3>Something Went Wrong</h3>
+        <p><?php echo htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8'); ?></p>
+        <a href="view_orders.php" class="btn">Close</a>
+    </div>
+</div>
+<?php endif; ?>
 
 <div class="container">
     <h2>View Orders</h2>
@@ -57,3 +106,4 @@ if (isset($_GET['delete_id'])) {
 </div>
 
 <?php include '../includes/footer.php'; ?>
+
